@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "inquirer": "^9.2.12"
+    "inquirer": "^8.2.6",
+    "save": "^2.9.0"
   }
 }
