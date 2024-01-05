@@ -4,6 +4,37 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 //const fetch = require('node-fetch');
 
+const promptFeature = ()    =>  {
+    return inquirer.prompt([
+       { 
+        type: 'input',
+        message: "What is a feature of your project?",
+        name: 'feature',
+       },
+       {
+        type: 'confirm',
+        message : "Do you want to add more features?",
+        name: "addMore",
+       },
+    ])
+};
+
+
+
+
+const collectFeatures = async() =>  {
+    const features = [];
+    let addMore = true;
+
+    while (addMore) {
+        const answers = await promptFeature();
+        features.push(answers.feature);
+        addMore = answers.addMore;
+    }
+    return features;
+};
+
+
 inquirer
     .prompt([
         {
@@ -72,15 +103,10 @@ inquirer
                 "Node.js"
             ]
         },
-        {
-            type: 'input',
-            message: "what is a feature of your project?",
-            name: 'feature'
-        },
-        
+       
     ])
-    .then((answer) =>   {
-        console.log("asdg")
+    .then(async(answers) =>   {
+        answers.features = await collectFeatures();
     })
     .catch((error) => {
         error ? console.error("error!") : console.log("Successfully create a Readme.md")
