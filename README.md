@@ -1,2 +1,16 @@
 # Readme-Generator
-this is a readme generator 
+
+## Description
+    ${description}
+
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Technologies-Used](#technologies)
+- [License](#license)
+- [Contribution](#contribution)
+- [Tests](#tests)
+- [Preview](#preview)
+- [Link](#link)
+
+
