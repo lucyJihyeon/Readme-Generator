@@ -12,9 +12,14 @@ const promptFeature = () => {
       name: "feature",
     },
     {
-      type: "input",
-      message: "Write a description of the feature",
-      name: "featuredesc",
+      type: "editor",
+      message: "Write a User Story of the feature",
+      name: "userstory",
+    },
+    {
+      type: 'editor',
+      message: "Write a Accepted Criteria of the feature",
+      name: 'acceptedcriteria'
     },
     {
       type: "confirm",
@@ -26,19 +31,20 @@ const promptFeature = () => {
 
 const collectFeatures = async () => {
   const features = [];
-  const featureDesc = [];
+  const userStory = [];
+  const acceptedCriteria = [];
   let addMore = true;
   let readmeF = "";
   while (addMore) {
     const answers = await promptFeature();
     features.push(answers.feature);
-    featureDesc.push(answers.featuredesc);
+    userStory.push(answers.userstory);
+    acceptedCriteria.push(answers.acceptedcriteria);
     addMore = answers.addMore;
   }
-  console.log(features);
   for (let i = 0; i < features.length; i++) {
     readmeF +=
-      "## " + features[i] + `\n### Description` + `\n` + featureDesc[i] + `\n`;
+      "## " + features[i] + `\n### User Story\n` + userStory[i] + `\n### Accepted Criteria\n` + acceptedCriteria[i] + `\n`;
   }
   return readmeF;
 };
@@ -61,7 +67,7 @@ inquirer
       name: "repoName",
     },
     {
-      type: "input",
+      type: "editor",
       message: "Please write a short description of your project",
       name: "description",
     },
@@ -72,7 +78,7 @@ inquirer
       choices: ["MIT", "APACHE 2.0", "GPL 3.0", "BSD 3", "None"],
     },
     {
-      type: "input",
+      type: "editor",
       message: "What command should be run to install dependencies?",
       name: "dependency",
     },
@@ -82,12 +88,12 @@ inquirer
       name: "test",
     },
     {
-      type: "input",
+      type: "editor",
       message: "What does the user need to know about using the repo?",
       name: "usage",
     },
     {
-      type: "input",
+      type: "editor",
       message:
         "what does the user need to know about contributing to the repo?",
       name: "contribution",
@@ -119,7 +125,6 @@ inquirer
   ])
   .then(async (answers) => {
     answers.features = await collectFeatures();
-    console.log(answers.features);
     const context = 
     `
 # ${answers.repoName}
@@ -131,7 +136,7 @@ ${answers.description}
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
-- [Technologies-Used](#technologies)
+- [Technologies-Used](#technologies-used)
 - [License](#license)
 - [Contribution](#contribution)
 - [Tests](#tests)
@@ -140,7 +145,7 @@ ${answers.description}
 - [Contact](#contact)
 
 ## Installation 
-To install necessary denpendencies, run following command:
+To install necessary dependencies, run following command:
 \`\`\`
 ${answers.dependency}
 \`\`\`
@@ -184,7 +189,7 @@ This is the link to the application
 If you have any questions or suggestions regarding this project, feel free to reach out:
 
 - **Email:** ${answers.email}
-- **GitHub:** ${answers.username}
+- **GitHub:** ${answers.username}(https://github.com/${answers.username})
 
 `;
 
