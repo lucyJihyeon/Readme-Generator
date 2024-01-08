@@ -2,8 +2,8 @@
 const inquirer = require("inquirer");
 //Import fs to read/write
 const fs = require("fs");
-//const fetch = require('node-fetch');
 
+//function to prompt the user to enter features of the project
 const promptFeature = () => {
   return inquirer.prompt([
     {
@@ -29,19 +29,24 @@ const promptFeature = () => {
   ]);
 };
 
+//use async to use the promise return from promptFeature function.
 const collectFeatures = async () => {
+  //empty features/ userstory/ acceptedCriteria array
   const features = [];
   const userStory = [];
   const acceptedCriteria = [];
+  //retrieved from the promptFeature prompt
   let addMore = true;
   let readmeF = "";
   while (addMore) {
+    //push the answers from the promptFeature function to the array.
     const answers = await promptFeature();
     features.push(answers.feature);
     userStory.push(answers.userstory);
     acceptedCriteria.push(answers.acceptedcriteria);
     addMore = answers.addMore;
   }
+  //update the readme feature section dynamically using the user inputs
   for (let i = 0; i < features.length; i++) {
     readmeF +=
       "## " + features[i] + `\n### User Story\n` + userStory[i] + `\n### Accepted Criteria\n` + acceptedCriteria[i] + `\n`;
@@ -49,55 +54,67 @@ const collectFeatures = async () => {
   return readmeF;
 };
 
+//use inquirer to prompt users to ask questions
 inquirer
   .prompt([
+    //prompt the user to enter their github username
     {
       type: "input",
       message: "What is your Github username?",
       name: "username",
     },
+    //prompt the user to enter their email address
     {
       type: "input",
       message: "What is your email address?",
       name: "email",
     },
+    //prompt the user to enter their project name
     {
       type: "input",
       message: "What is your project's name?",
       name: "repoName",
     },
+    //prompt the user to write about their project
+    //editor type to allow users to enter multi lines/ edit them as needed
     {
       type: "editor",
       message: "Please write a short description of your project",
       name: "description",
     },
+    //prompt the user to choose a license from a list using an arrow
     {
       type: "list",
       message: "What kind of license should your project have?",
       name: "license",
       choices: ["MIT", "APACHE 2.0", "GPL 3.0", "BSD 3", "None"],
     },
+    //prompt the user to write about the installation 
     {
       type: "editor",
       message: "What command should be run to install dependencies?",
       name: "dependency",
     },
+    //prompt the user to write how to run test
     {
       type: "input",
       message: "What command should be run to run test?",
       name: "test",
     },
+    //prompt the user to write about the usage
     {
       type: "editor",
       message: "What does the user need to know about using the repo?",
       name: "usage",
     },
+    //prompt the user to write about the contributioin
     {
       type: "editor",
       message:
         "what does the user need to know about contributing to the repo?",
       name: "contribution",
     },
+    //prompt the user to provide a list of technologies used
     {
       type: "checkbox",
       message: "What are the technologies you used to build your project?",
@@ -112,20 +129,25 @@ inquirer
         "Node.js",
       ],
     },
+    //prompt the user to enter the pathway of a preview image
     {
         type: 'input',
         message: "Enter your preview pathway",
         name: 'preview'
     },
+    //prompt the user to enter the deployed link of the user's project
     {
         type: 'input',
         message: "Enter the deployed link of your project",
         name: 'link'
     }
   ])
+  //collect the features from the collectFeatures function 
+  //use async and await to wait for the promise(from the collectFeatures function) to be resolved before proceeding
   .then(async (answers) => {
     answers.features = await collectFeatures();
-    const context = 
+    //Generated the README content based on the user inputs.
+    const content = 
     `
 # ${answers.repoName}
 
@@ -193,8 +215,9 @@ If you have any questions or suggestions regarding this project, feel free to re
 
 `;
 
-
-    fs.writeFile("README.md", context, (error) => {
+//Write the generated "content" to the "README.md" 
+    fs.writeFile("README.md", content, (error) => {
+      //if error happens, log "Error writing README.md!". Otherwise, log "Successfully created README.md"
       error
         ? console.log("Error writing README.md!")
         : console.log("Successfully created README.md");
